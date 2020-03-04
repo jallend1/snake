@@ -5,7 +5,12 @@ const width = canvas.width;
 const blockSize = 10;
 const widthInBlocks = width / blockSize;
 const heightInBlocks = height / blockSize;
-const directions = {37: "left", 38: "up", 39: "right", 40: "down"};     // Keycodes for arrows
+const directions = {                                    // Keycodes for arrows
+    37: "left", 
+    38: "up", 
+    39: "right", 
+    40: "down"
+};     
 let score = 0;
 
 function circle(x, y, radius, fillCircle){              // Creates shape of the apple
