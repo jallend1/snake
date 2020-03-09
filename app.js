@@ -12,13 +12,14 @@ const directions = {                                    // Keycodes for arrows
     40: "down"
 };     
 let score = 0;
+let snake;
+let apple;
 
 function circle(x, y, radius, fillCircle){              // Creates shape of the apple
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2, false);
     fillCircle ? ctx.fill() : ctx.stroke();
-};
-
+}
 function drawBorder(){                                  // Establishes and styles game boundaries
     ctx.fillStyle = "Gray";
     ctx.fillRect(0, 0, width, blockSize);
@@ -26,7 +27,6 @@ function drawBorder(){                                  // Establishes and style
     ctx.fillRect(0, 0, blockSize, height);
     ctx.fillRect(width - blockSize, 0, blockSize, height);
 }
-
 function drawScore(){                                   // Draws score on canvas
     ctx.font = '20px Courier';
     ctx.fillStyle = 'Black';
@@ -34,14 +34,28 @@ function drawScore(){                                   // Draws score on canvas
     ctx.textBaseline = 'top';
     ctx.fillText('Score: ' + score, blockSize, blockSize);
 }
-
-function gameOver(){                                    // End of game message
-    clearInterval(intervalID);
+function gameFrame(){
+    ctx.clearRect(0, 0, width, height);
+    drawScore();
+    snake.move();
+    snake.draw();
+    apple.draw();
+    drawBorder();
+}
+function gameOver(){                                    // End of game message 
     ctx.font = '60px Courier';
     ctx.fillStyle = 'Black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('Game Over', width / 2, height / 2);
+}
+function gameReset(){
+    snake = new Snake();
+    apple = new Apple();
+    score = 0;
+    snake.draw();
+    apple.draw();
+    gameFrame();
 }
 
 class Block {                                                   // Establishes grid system on canvas
@@ -100,7 +114,6 @@ class Snake{
     move() {                                                    // Moves the snake
         const head = this.segments[0];
         let newHead;
-    
         this.direction = this.nextDirection;
         if (this.direction === 'right'){
             newHead = new Block(head.col + 1, head.row);
@@ -144,7 +157,7 @@ class Apple{
     }
     draw(){
         this.position.drawCircle('LimeGreen');
-    };
+    }
     move(){                                                                     // CHooses random spot for a new apple
         const randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
         const randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 2;
@@ -152,25 +165,18 @@ class Apple{
     }   
 }
 
-// Game initializiation 
-const snake = new Snake();
-const apple = new Apple();
-snake.draw();
-apple.draw();
+gameReset();
+snake = new Snake;
+apple = new Apple;
 
-
-const intervalID = setInterval(() => {                                          // Game animation
-    ctx.clearRect(0, 0, width, height);
-    drawScore();
-    snake.move();
-    snake.draw();
-    apple.draw();
-    drawBorder();
-}, 100);
+let intervalID = setInterval(gameFrame, 100);
 
 window.addEventListener('keydown', e => {                                       // Checks array of directions to move snake
     const newDirection = directions[e.keyCode];
     if(newDirection !== undefined){
         snake.setDirection(newDirection);
+    }
+    if(e.keyCode === 32){
+        gameReset();
     }
 });
