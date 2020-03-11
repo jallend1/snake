@@ -1,5 +1,6 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
+const scoreBox = document.querySelector('#scorebox');
 const height = canvas.height;
 const width = canvas.width;
 const blockSize = 10;
@@ -26,11 +27,12 @@ function drawBorder(){                                  // Establishes and style
     ctx.fillRect(width - blockSize, 0, blockSize, height);
 }
 function drawScore(){                                   // Draws score on canvas
-    ctx.font = '20px Courier';
-    ctx.fillStyle = 'Black';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText('Score: ' + score, blockSize, blockSize);
+        scoreBox.innerText = `Score: ${score}`;
+        //     ctx.font = '20px Courier';
+        //     ctx.fillStyle = 'Black';
+        //     ctx.textAlign = 'left';
+        //     ctx.textBaseline = 'top';
+        //     ctx.fillText('Score: ' + score, blockSize, blockSize);
 }
 function gameFrame(){
     ctx.clearRect(0, 0, width, height);
